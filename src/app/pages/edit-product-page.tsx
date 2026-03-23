@@ -1,6 +1,7 @@
 import { AdminLayout } from "../layouts/adminLayout"
 import { useParams, useNavigate } from "react-router"
 import { useEffect, useState } from "react"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 export function EditProductPage(){
 
@@ -13,7 +14,7 @@ export function EditProductPage(){
 
     const fetchProduct = async()=>{
 
-      const res = await fetch(`http://localhost:5000/products/${id}`)
+      const res = await fetch(`${API}/products/${id}`)
       const data = await res.json()
 
       setProduct(data.product)
@@ -28,7 +29,7 @@ export function EditProductPage(){
 
     e.preventDefault()
 
-    await fetch(`http://localhost:5000/admin/products/${id}`,{
+    await fetch(`${API}/admin/products/${id}`,{
       method:"PUT",
       headers:{
         "Content-Type":"application/json"

@@ -1,6 +1,7 @@
 import { AdminLayout } from "../layouts/adminLayout"
 import { useState } from "react"
 import { useNavigate } from "react-router"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 export function AddProductPage(){
 
@@ -26,7 +27,7 @@ export function AddProductPage(){
       description
     }
 
-    await fetch("http://localhost:5000/admin/products",{
+    await fetch(`${API}/admin/products`,{
       method:"POST",
       headers:{
         "Content-Type":"application/json"

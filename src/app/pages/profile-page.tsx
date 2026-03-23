@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 export function ProfilePage() {
 
@@ -12,7 +13,7 @@ export function ProfilePage() {
 
         const token = localStorage.getItem("token")
 
-        const response = await fetch("http://localhost:5000/api/profile", {
+        const response = await fetch(`${API}/api/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

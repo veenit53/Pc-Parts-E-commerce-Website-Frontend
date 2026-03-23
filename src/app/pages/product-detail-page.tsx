@@ -4,6 +4,8 @@ import { ShoppingCart, ArrowLeft, Package, CheckCircle, XCircle, Minus, Plus, Ch
 import { Navigation } from "../components/navigation"
 import { useCart } from "../../context/cart-context"
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 type Product = {
   _id: string
   name: string
@@ -27,12 +29,11 @@ export function ProductDetailPage() {
 
   const { addToCart, removeFromCart, getQuantity, updateQuantity } = useCart()
 
-  // ── Fetch current product ───────────────────────────────────────────────────
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true)
-      try {
-        const res = await fetch(`http://localhost:5000/products/${id}`)
+        try {
+          const res = await fetch(`${API}/products/${id}`)
         const data = await res.json()
         if (res.ok) setProduct(data.product)
       } catch (err) {
@@ -49,7 +50,7 @@ export function ProductDetailPage() {
     if (!product) return
     const fetchRelated = async () => {
       try {
-        const res = await fetch("http://localhost:5000/products")
+        const res = await fetch(`${API}/products`)
         const data = await res.json()
         const all: Product[] = data.products || []
         const filtered = all

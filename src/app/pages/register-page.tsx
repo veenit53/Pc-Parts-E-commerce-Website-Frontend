@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 import { Separator } from "../components/ui/seperator"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 type FormErrors = {
   name?: string
@@ -78,7 +79,7 @@ export function RegisterPage() {
       }
 
       try{
-        const response = await fetch("http://localhost:5000/api/register",{
+        const response = await fetch(`${API}/api/register`,{
           method:"POST",
           headers:{
             "Content-Type":"application/json"

@@ -6,6 +6,8 @@ import { useCart } from "../../context/cart-context";
 import { Star, ArrowRight, Cpu, CircuitBoard, MemoryStick, HardDrive, Monitor, Gamepad2 } from "lucide-react";
 import { Footer } from "../components/footer";
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 type Product = {
   _id: string;
   name: string;
@@ -26,7 +28,7 @@ export function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:5000/products");
+        const res = await fetch(`${API}/products`);
         const data = await res.json();
 
         if (res.ok && data.products) {

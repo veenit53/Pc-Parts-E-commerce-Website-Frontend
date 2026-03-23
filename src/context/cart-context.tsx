@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 const CartContext = createContext<any>(null)
 
@@ -10,7 +11,7 @@ export const CartProvider = ({ children }: any) => {
   const fetchCart = async () => {
     if (!token) return
 
-    const res = await fetch('http://localhost:5000/cart', {
+    const res = await fetch(`${API}/cart`, {
       headers: { Authorization: `Bearer ${token}` }
     })
 
@@ -38,7 +39,7 @@ export const CartProvider = ({ children }: any) => {
 
   const addToCart = async (productId: string) => {
     try {
-      await fetch('http://localhost:5000/cart/add', {
+      await fetch(`${API}/cart/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,30 +48,17 @@ export const CartProvider = ({ children }: any) => {
         body: JSON.stringify({ productId })
       })
 
-      fetchCart() // ✅ ALWAYS SYNC REAL DATA
+      fetchCart()
     } catch (err) {
       console.error('Add failed', err)
     }
   }
 
-  // const removeFromCart = async(productId:string)=>{
-
-  //   await fetch(`http://localhost:5000/cart/${productId}`,{
-  //     method:"DELETE",
-  //     headers:{
-  //       Authorization:`Bearer ${token}`
-  //     }
-  //   })
-
-  //   fetchCart()
-
-  // }
-
   const removeFromCart = async (productId: string) => {
   const token = localStorage.getItem("token");
 
   try {
-    const res = await fetch(`http://localhost:5000/cart/${productId}`, {
+    const res = await fetch(`${API}/cart/${productId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`
@@ -81,12 +69,10 @@ export const CartProvider = ({ children }: any) => {
 
     console.log("DELETE RESPONSE:", data);
 
-    // ✅ directly update state from backend
     if(data.items||[]) {
       setCart(data.items);
     }
     else{
-      // fallback to refetch if backend doesn't return updated cart
       fetchCart();
     }
 
@@ -95,22 +81,9 @@ export const CartProvider = ({ children }: any) => {
   }
 };
 
-  // const updateQuantity = async (productId: string, quantity: number) => {
-  //   await fetch('http://localhost:5000/cart/update', {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${token}`
-  //     },
-  //     body: JSON.stringify({ productId, quantity })
-  //   })
-
-  //   fetchCart()
-  // }
-
   const updateQuantity = async (productId: string, quantity: number) => {
     try {
-      await fetch('http://localhost:5000/cart/update', {
+      await fetch(`${API}/cart/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +92,7 @@ export const CartProvider = ({ children }: any) => {
         body: JSON.stringify({ productId, quantity })
       })
 
-      fetchCart() // ✅ sync
+      fetchCart()
     } catch (err) {
       console.error('Update failed', err)
     }

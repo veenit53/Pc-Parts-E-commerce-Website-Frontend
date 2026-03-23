@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { Separator } from "../components/ui/seperator";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 type FormErrors = {
   email?: string
@@ -47,7 +48,7 @@ export function LoginPage() {
       console.log("Login data:", { email, password })
 
       try{
-        const response = await fetch("http://localhost:5000/api/login", {
+        const response = await fetch(`${API}/api/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

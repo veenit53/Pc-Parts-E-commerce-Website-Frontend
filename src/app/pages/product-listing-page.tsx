@@ -4,8 +4,8 @@ import { Star, SlidersHorizontal, X, ChevronDown } from "lucide-react"
 import { Navigation } from "../components/navigation"
 import { useCart } from "../../context/cart-context"
 import { Footer } from "../components/footer"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
-// ─── All categories ───────────────────────────────────────────────────────────
 const ALL_CATEGORIES = ["CPU", "GPU", "Motherboard", "RAM", "Storage", "Power Supply", "Cabinet"]
 
 const PRICE_RANGES = [
@@ -29,17 +29,15 @@ export function ProductListingPage() {
 
   const { addToCart, removeFromCart, getQuantity, updateQuantity } = useCart()
 
-  // Convert URL slug back to category name  e.g. "power-supply" → "Power Supply"
   const slugToCategory = (slug: string) =>
     ALL_CATEGORIES.find(
       c => c.toLowerCase().replace(/ /g, "-") === slug.toLowerCase()
     ) ?? slug
 
-  // ── Fetch products ──────────────────────────────────────────────────────────
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:5000/products")
+        const res = await fetch(`${API}/products`)
         const data = await res.json()
         setProducts(data.products || [])
       } catch (err) {
@@ -49,7 +47,6 @@ export function ProductListingPage() {
     fetchProducts()
   }, [])
 
-  // ── Pre-select category from URL param ─────────────────────────────────────
   useEffect(() => {
     if (category) {
       const matched = slugToCategory(category)
@@ -59,14 +56,12 @@ export function ProductListingPage() {
     }
   }, [category])
 
-  // ── Toggle category checkbox ────────────────────────────────────────────────
   const toggleCategory = (cat: string) => {
     setSelectedCategories(prev =>
       prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
     )
   }
 
-  // ── Filter products ─────────────────────────────────────────────────────────
   const filtered = products.filter(p => {
     const catMatch = selectedCategories.length === 0 ||
       selectedCategories.some(c => c.toLowerCase() === p.category.toLowerCase())
@@ -78,7 +73,6 @@ export function ProductListingPage() {
     return catMatch && priceMatch
   })
 
-  // ── Sort products ───────────────────────────────────────────────────────────
   const sorted = [...filtered].sort((a, b) => {
     if (sort === "low")    return a.price - b.price
     if (sort === "high")   return b.price - a.price
@@ -86,14 +80,12 @@ export function ProductListingPage() {
     return 0  // popularity = default order from API
   })
 
-  // ── Page title ──────────────────────────────────────────────────────────────
   const pageTitle = selectedCategories.length === 1
     ? selectedCategories[0]
     : selectedCategories.length > 1
     ? "Filtered Products"
     : "All Products"
 
-  // ── Clear all filters ───────────────────────────────────────────────────────
   const clearFilters = () => {
     setSelectedCategories([])
     setSelectedPriceRange(null)
@@ -102,7 +94,6 @@ export function ProductListingPage() {
 
   const hasActiveFilters = selectedCategories.length > 0 || selectedPriceRange !== null
 
-  // ────────────────────────────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white">

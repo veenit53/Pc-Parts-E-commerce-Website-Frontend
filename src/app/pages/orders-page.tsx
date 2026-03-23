@@ -3,6 +3,7 @@ import { Link } from "react-router"
 import { Package, Eye } from "lucide-react"
 import { Navigation } from "../components/navigation"
 import { Footer } from "../components/footer"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 type OrderItem = {
   name: string
@@ -34,7 +35,7 @@ export function OrdersPage() {
 
         const token = localStorage.getItem("token")
 
-        const res = await fetch("http://localhost:5000/my-orders",{
+              const res = await fetch(`${API}/my-orders`,{
           headers:{
             Authorization:`Bearer ${token}`
           }

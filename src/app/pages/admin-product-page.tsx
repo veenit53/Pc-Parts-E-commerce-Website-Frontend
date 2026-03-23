@@ -3,6 +3,8 @@ import { useEffect, useState } from "react"
 import { Pencil, Trash } from "lucide-react"
 import { useNavigate } from "react-router"
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export function AdminProductsPage() {
 
   const [products, setProducts] = useState<any[]>([])
@@ -12,7 +14,7 @@ export function AdminProductsPage() {
 
     const fetchProducts = async () => {
 
-      const res = await fetch("http://localhost:5000/products")
+      const res = await fetch(`${API}/products`)
       const data = await res.json()
 
       setProducts(data.products || [])
@@ -29,7 +31,7 @@ export function AdminProductsPage() {
 
     if(!confirmDelete) return
 
-    await fetch(`http://localhost:5000/admin/products/${id}`,{
+    await fetch(`${API}/admin/products/${id}`,{
       method:"DELETE"
     })
 

@@ -7,7 +7,8 @@ import {
   MemoryStick, HardDrive, Zap, Box, Check, Save, ShoppingCart
 } from "lucide-react"
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 
 type Product = {
   _id: string
@@ -22,7 +23,6 @@ type SelectedBuild = {
   [category: string]: Product
 }
 
-// ─── Category Config ──────────────────────────────────────────────────────────
 
 const CATEGORIES = [
   { key: "CPU",          label: "CPU",          icon: Cpu,           color: "#f97316" },
@@ -34,13 +34,9 @@ const CATEGORIES = [
   { key: "Cabinet",      label: "Cabinet",       icon: Box,           color: "#14b8a6" },
 ]
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-// Converts "Power Supply" → "power-supply" for URL
 const categoryToSlug = (key: string) =>
   key.toLowerCase().replace(/ /g, "-")
 
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export function PCBuilderPage() {
   const { addToCart } = useCart()
@@ -52,11 +48,10 @@ export function PCBuilderPage() {
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
-  // ── Fetch all products, group by category ───────────────────────────────────
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const res = await fetch("http://localhost:5000/products")
+        const res = await fetch(`${API}/products`)
         const data = await res.json()
         const all: Product[] = data.products || []
 
@@ -76,13 +71,12 @@ export function PCBuilderPage() {
     fetchAll()
   }, [])
 
-  // ── Load user's saved build on mount ────────────────────────────────────────
   useEffect(() => {
     const loadSavedBuild = async () => {
       const token = localStorage.getItem("token")
       if (!token) return
       try {
-        const res = await fetch("http://localhost:5000/builds/my-build", {
+        const res = await fetch(`${API}/builds/my-build`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (!res.ok) return
@@ -97,7 +91,6 @@ export function PCBuilderPage() {
     loadSavedBuild()
   }, [])
 
-  // ── Select / deselect a component ───────────────────────────────────────────
   const handleSelect = (category: string, item: Product) => {
     setSelected(prev => {
       // Clicking same item deselects it
@@ -114,7 +107,6 @@ export function PCBuilderPage() {
   const total = Object.values(selected).reduce((sum, item) => sum + item.price, 0)
   const selectedCount = Object.keys(selected).length
 
-  // ── Save build to user profile ───────────────────────────────────────────────
   const handleSaveBuild = async () => {
     const token = localStorage.getItem("token")
     if (!token) {
@@ -126,7 +118,7 @@ export function PCBuilderPage() {
 
     setSaving(true)
     try {
-      const res = await fetch("http://localhost:5000/builds/save", {
+      const res = await fetch(`${API}/builds/save`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,13 +139,9 @@ export function PCBuilderPage() {
       setSaving(false)
     }
   }
-
-  // ── Add all selected items to cart ──────────────────────────────────────────
   const handleAddAll = () => {
     Object.values(selected).forEach(item => addToCart(item._id))
   }
-
-  // ────────────────────────────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white">

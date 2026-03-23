@@ -1,5 +1,6 @@
 import { AdminLayout } from "../layouts/adminLayout"
 import { useEffect, useState } from "react"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 export function AdminOrdersPage(){
 
@@ -9,7 +10,7 @@ export function AdminOrdersPage(){
 
     const fetchOrders = async()=>{
 
-      const res = await fetch("http://localhost:5000/admin/orders")
+      const res = await fetch(`${API}/admin/orders`)
 
       if(!res.ok){
         console.error("Failed to fetch orders")

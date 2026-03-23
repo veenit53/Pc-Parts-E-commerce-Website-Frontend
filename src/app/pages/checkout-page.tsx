@@ -3,6 +3,7 @@ import { useNavigate } from "react-router"
 import { Navigation } from "../components/navigation"
 import { Footer } from "../components/footer"
 import { useCart } from "../../context/cart-context"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 type CartItem = {
   product: {
@@ -67,7 +68,7 @@ export function CheckoutPage(){
 
       setLoading(true)
 
-      const res = await fetch("http://localhost:5000/orders",{
+      const res = await fetch(`${API}/orders`,{
 
         method:"POST",
 

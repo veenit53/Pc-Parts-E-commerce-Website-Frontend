@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router"
 import { Navigation } from "../components/navigation"
 import { Footer } from "../components/footer"
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 type OrderItem = {
   name: string
@@ -44,7 +45,7 @@ export function OrderDetailsPage(){
 
         const token = localStorage.getItem("token")
 
-        const res = await fetch(`http://localhost:5000/orders/${id}`,{
+        const res = await fetch(`${API}/orders/${id}`,{
           headers:{
             Authorization:`Bearer ${token}`
           }
